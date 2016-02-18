@@ -1,12 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity i_kolo is
+entity and_gate is
 	port(x0,x1:in std_logic;
 		 y:out std_logic);
-end entity i_kolo;
+end entity and_gate;
 
-architecture beh of i_kolo is
+architecture beh of and_gate is
 begin
 	i:process is	
 	  begin
