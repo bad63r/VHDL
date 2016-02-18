@@ -17,3 +17,4 @@ begin
 		wait on x0,x1;
 		end process;
 end beh;
+
