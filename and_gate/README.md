@@ -1,1 +1,1 @@
-Code of behavioral model of and_gate and its test bench code.
+Code of behavioral model of <b>and gate</b> and its test bench code.
