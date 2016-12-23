@@ -41,3 +41,4 @@ begin
   sum <= std_logic_vector(adder(WIDTH-1 downto 0));
   
 end architecture;
+  --
