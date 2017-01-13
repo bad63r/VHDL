@@ -13,8 +13,9 @@ end entity;
 architecture rtl of adder_generic is
   signal adder: unsigned(WIDTH downto 0);
   signal cinw: std_logic_vector(WIDTH downto 0);
+  signal overflow_temp : std_logic;     -- pomocni signal kako bih mogao da manipulisem sa overflow-om u process-u
 begin
-  cin_edit:process
+  cin_edit:process(cin)
   begin
     cinw <= (others => '0');
     cinw(0) <= cin;
@@ -22,23 +23,25 @@ begin
 
   stat_signals:process(adder,a,b,cout) is
   begin
-    overflow <= '0';
     if ((a(WIDTH-1) = b(WIDTH-1)) and a(WIDTH-1) /= adder(WIDTH))  then
-      overflow <= '1';
-    end if;
-      if adder(WIDTH-1) = '1' then
+      overflow_temp <= '1';
+    else
+      overflow_temp <= '0' ;
+      if adder(WIDTH-1)= '1' then
         sign <= '1';
       end if;
-      if adder(WIDTH-1 downto 0) = (others =>'0') and overflow = '0' then
+
+      if adder(WIDTH-1 downto 0) = (others => '0') and overflow_temp = '0' then
         zero <= '1';
       end if;
-
+   end if;
+     
     cout <= adder(WIDTH);
       
   end process;
   
   adder <= unsigned('0' & a) + unsigned('0' & b) + unsigned(cinw);
   sum <= std_logic_vector(adder(WIDTH-1 downto 0));
-  
+  overflow <= overflow_temp;
 end architecture;
-  --
+
