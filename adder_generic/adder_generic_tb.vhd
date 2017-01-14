@@ -8,6 +8,8 @@ end entity sabirac_generic_tb;
 
 architecture rtl of sabirac_generic_tb is
 
+constant WIDTH : natural := 5;
+  
   signal a_s,b_s : std_logic_vector(WIDTH-1 downto 0);
   signal cin_s : std_logic;
   signal sum_s : std_logic_vector(WIDTH-1 downto 0);
@@ -15,8 +17,8 @@ architecture rtl of sabirac_generic_tb is
 
 begin  -- architecture rtl
 
-duv: entity work.sabirac_generic(rtl)
-  generic map (WIDTH => 5)
+duv: entity work.adder_generic(rtl)
+  generic map (WIDTH => WIDTH)
   port map (a => a_s,
             b => b_s,
             cin => cin_s,
@@ -29,9 +31,9 @@ duv: entity work.sabirac_generic(rtl)
 
 stim_gen: process is
 begin
-  a_s <= "00000","00001" after 100 ns,"00010" after 200 ns,"10001" after 300 ns, "10000" after 400 ns;
+  a_s <= "00000","00001" after 100 ns,"00010" after 200 ns,"10001" after 300 ns, "10000" after 400 ns, "11000" after 500 ns;
   
-  b_s <= "00000","00001" after 100 ns,"00010" after 200 ns,"00101" after 300 ns, "10000" after 400 ns;
+  b_s <= "00000","00001" after 100 ns,"00010" after 200 ns,"00101" after 300 ns, "10000" after 400 ns, "11000" after 500 ns;
 
   cin_s <= '0';
   wait;
