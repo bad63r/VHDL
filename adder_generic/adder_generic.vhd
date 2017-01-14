@@ -1,6 +1,6 @@
 --iako vivado ne sintetise sabirac, ovo i dalje radi.
 --simulacija sa ovim dizajnom koji nema gresaka ne radi kao sto bi trebalo,
---pogledati signal "sign" npr. PITAJ VUKA
+--pogledati signal "sign" npr. KONSULTACIJE
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
