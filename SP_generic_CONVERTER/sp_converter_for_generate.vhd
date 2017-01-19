@@ -23,11 +23,14 @@ begin  -- architecture rtl
 
    generisanje_FF: for i in 0 to WIDTH-1 generate
 
-     process(clk)
+     process(clk)    -- ne radi ovaj proces kako treba,ne znam kako da uopste
+                     -- oznacim izlaze sa ff-ova. Lako bi ih ja spojio posle u
+                     -- jedan.
            begin
              if rising_edge(clk) then
-               ff_o(i) <= s_i;
+               bit <= s_i;
              end if;
+             ff <= bit & ff_o
            end process;
       
     end generate generisanje_FF; 
@@ -36,12 +39,12 @@ begin  -- architecture rtl
              begin
                if rising_edge(clk) then
                  cnt <= cnt + 1;
+                 if cnt = WIDTH then
+                   p_o <= std_logic_vector(ff_o);
+                   cnt <= (others =>'0');
+                 end if;
                end if;
-
-               if cnt = WIDTH then
-                 p_o <= std_logic_vector(ff_o);
-                 cnt <= (others => '0');
-               end if;
+                   
                end process;
                
              
