@@ -16,25 +16,29 @@ end entity sp_converter_generic;
 
 architecture rtl of sp_converter_generic is
 
-signal ff_o : unsigned(WIDTH-1 downto 0) := (others =>'0');
-signal cnt : unsigned(WIDTH-1 downto 0):= (others => '0');
+  signal buf_reg : unsigned(WIDTH-1 downto 0) := (others =>'0');
+  signal cnt : unsigned(WIDTH-1 downto 0):= (others => '0');
   
 begin  -- architecture rtl
 
-   generisanje_FF: for i in 0 to WIDTH-1 generate
+  generisanje_FF: for i in 1 to WIDTH-1 generate
+    process(clk)    -- ne radi ovaj proces kako treba,ne znam kako da uopste
+    -- oznacim izlaze sa ff-ova. Lako bi ih ja spojio posle u
+    -- jedan.
+    begin
+      if rising_edge(clk) then
+        buf_reg(i) <= buf_reg(i-1);
+      end if;
+    end process;
+  end generate generisanje_FF; 
 
-     process(clk)    -- ne radi ovaj proces kako treba,ne znam kako da uopste
-                     -- oznacim izlaze sa ff-ova. Lako bi ih ja spojio posle u
-                     -- jedan.
-           begin
-             if rising_edge(clk) then
-               bit <= s_i;
-             end if;
-             ff <= bit & ff_o
-           end process;
-      
-    end generate generisanje_FF; 
-
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      buf_reg(0) <= s_i;
+    end if;
+  end process;
+  
     counter: process(clk)  --odredjuje duzinu izlaza
              begin
                if rising_edge(clk) then
