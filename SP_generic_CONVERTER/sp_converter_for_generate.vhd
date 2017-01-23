@@ -44,7 +44,7 @@ begin  -- architecture rtl
                if rising_edge(clk) then
                  cnt <= cnt + 1;
                  if cnt = WIDTH then
-                   p_o <= std_logic_vector(ff_o);
+                   p_o <= std_logic_vector(buf_reg);
                    cnt <= (others =>'0');
                  end if;
                end if;
