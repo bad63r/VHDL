@@ -1,3 +1,6 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
 entity arbitar is
   
   port (
@@ -10,7 +13,7 @@ end entity arbitar;
 architecture rtl of arbitar is
 
   type moguca_stanja is (waitr, grant1, grant0);
-  signal stanje : moguca_stanja;
+  signal current_state, next_state : moguca_stanja;
 
   
 begin  -- architecture rtl
@@ -27,26 +30,27 @@ begin  -- architecture rtl
   dodela_stanja:process(current_state,r0,r1)
   begin
     if current_state = waitr then
-      if (not r1 ) and (not r0) then
+      if (r1 = '0') and (r0 = '0') then
         next_state <= waitr;
       elsif r1 = '1' then
         next_state <= grant1;
-      elsif (not r1) and r0 then
+      elsif (r1 = '0') and (r0 = '1') then
         next_state <= grant0;
       end if;
     elsif current_state = grant0 then
-      if r0 then
+      if (r0 = '1') then
         next_state <= grant0;
-      elsif (not r0) then
+      elsif (r0 = '0') then
         next_state <= waitr;
       end if;
     elsif current_state = grant1 then
-      if r1 then
+      if (r1 = '1') then
         next_state <= grant1;
       else
         next_state <= waitr;
       end if;
     end if;
+    end process;
     
     dekodovanje_stanja: process(current_state)
     begin
