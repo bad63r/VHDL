@@ -89,7 +89,8 @@ begin  -- architecture rtl
         when others =>
         g1 <= '0';
         g0 <= '0';
-      end case;
+
+        end case;
    end process;
     
 end architecture rtl;
