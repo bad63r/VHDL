@@ -70,10 +70,10 @@ begin  -- architecture rtl
     process(clk,reset)
     begin
       if reset = '1' then
-        a_next <= (others => '0');
-        b_next <= (others => '0');
-        n_next <= (others => '0');
-        p_next <= (others => '0');
+        a_reg <= (others => '0');
+        b_reg <= (others => '0');
+        n_reg <= (others => '0');
+        p_reg <= (others => '0');
       elsif rising_edge(clk) then
         a_reg <= a_next;
         b_reg <= b_next;
