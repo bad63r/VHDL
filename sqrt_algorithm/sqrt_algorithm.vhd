@@ -100,6 +100,10 @@ begin  -- architecture rtl
       when calc =>
         op_next <= (op_reg - (res_reg + one_reg));
         res_next <= (res_reg + (one_reg(WIDTH-2 downto 0) & '0'));
+      when finit =>
+        op_next <= op_reg;
+        res_next <= ('0' & res_reg(WIDTH-1 downto 1));
+        one_next <= ("00" & one_reg(WIDTH-1 downto 2));
     end case;
   end process;
   
