@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.std_logic_arith.all; --ova biblioteka je samo za conv_std_logic_vector
+                              --funkciju
 
 entity sqrt_algorithm is
   
@@ -56,7 +58,7 @@ begin  -- architecture rtl
       when calc =>
         next_state <= finit;
       when finit =>
-        if (one /= '0') then
+        if (one_next /= 0) then
           if (op_next >= res_next + one_next) then
             next_state <= calc;
           else
@@ -90,13 +92,17 @@ begin  -- architecture rtl
   begin
     case current_state is
       when idle =>
-        op_next <= x_in;
-        res_next <= conv_std_logic_vector(0,WIDTH);
-        one_next <= ("01" & conv_std_logic_vector(0,WIDTH-2)); 
+        op_next <= unsigned(x_in);
+        res_next <= unsigned(0); 
+        one_next <= ("01" & to_unsigned(0,WIDTH-2)); --da li ovde mogu da
+                                                     --koristim to_unsigned ali
+                                                     --ja ne znam kako ili moram da
+                                                     --napravim signal koji ima
+                                                     --tu vrednost?
       when i1 =>
-        op_next <= x_in;
-        res_next <= conv_std_logic_vector(0,WIDTH);
-        one_next <= (conv_std_logic_vector(0,2) & one_reg(WIDTH-3 downto 0));
+        op_next <= unsigned(x_in);
+        res_next <= to_unsigned(0,WIDTH); 
+        one_next <= (to_unsigned(0,2) & one_reg(WIDTH-3 downto 0)); 
       when calc =>
         op_next <= (op_reg - (res_reg + one_reg));
         res_next <= (res_reg + (one_reg(WIDTH-2 downto 0) & '0'));
@@ -107,7 +113,7 @@ begin  -- architecture rtl
     end case;
   end process;
   
-result <= conv_std_logic_vector(res_reg)
+result <= std_logic_vector(res_reg);
 
 
-architecture rtl;
+end architecture rtl;
