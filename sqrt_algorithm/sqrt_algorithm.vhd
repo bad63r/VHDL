@@ -1,8 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.std_logic_arith.all; --ova biblioteka je samo za conv_std_logic_vector
-                              --funkciju
 
 entity sqrt_algorithm is
   
@@ -93,7 +91,7 @@ begin  -- architecture rtl
     case current_state is
       when idle =>
         op_next <= unsigned(x_in);
-        res_next <= unsigned(0); 
+        res_next <= to_unsigned(0,WIDTH); 
         one_next <= ("01" & to_unsigned(0,WIDTH-2)); --da li ovde mogu da
                                                      --koristim to_unsigned ali
                                                      --ja ne znam kako ili moram da
