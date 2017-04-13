@@ -40,7 +40,7 @@ begin  -- architecture rtl
       x_in <= conv_std_logic_vector(0,WIDTH),conv_std_logic_vector(9,WIDTH) after 30 ns, conv_std_logic_vector(16,WIDTH) after 80 ns, conv_std_logic_vector(64,WIDTH) after 130 ns;
 
       start <='1'; 
-      reset <= '0','1' after 125 ns, '0' after 200 ns;
+      reset <= '1','0' after 10 ns,'1' after 125 ns, '0' after 200 ns;
       wait;
       end process;
       
