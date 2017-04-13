@@ -18,7 +18,7 @@ end entity sqrt_algorithm;
 
 architecture rtl of sqrt_algorithm is
 
-  type state is (idle,i1,calc,finit);
+  type state is (idle,i1,calc,finit,pra);
   signal current_state,next_state : state;
   signal op_reg,op_next,res_reg,res_next,one_reg,one_next : unsigned(WIDTH-1 downto 0);
 begin  -- architecture rtl
@@ -38,24 +38,31 @@ begin  -- architecture rtl
   begin
     case current_state is
       when idle =>
+        assert (not (current_state = idle)) report "current state is idle" severity note;
         if start = '1' then
-          next_state <= i1;
+          next_state <= pra;
         else
           next_state <= idle;
         end if;
-      when i1 =>
-        if (one_reg > op_reg) then
+      when pra =>
+        assert (not (current_state = pra)) report "current state is pra" severity note;
+        if (one_next> op_next) then --probacemo da vidimo da li treba next
           next_state <= i1;
         else
-          if (op_reg >= res_reg + one_reg) then
+          if (op_next >= res_next+ one_next) then
             next_state <= calc;
           else
             next_state <= finit;
           end if;
         end if;
+      when i1 =>
+        assert (not (current_state = i1)) report "current state is i1" severity note;
+        next_state <= pra;
       when calc =>
+        assert (not (current_state = calc)) report "current state is calc" severity note;
         next_state <= finit;
       when finit =>
+        assert (not (current_state = finit)) report "current state is finit" severity note;
         if (one_next /= 0) then
           if (op_next >= res_next + one_next) then
             next_state <= calc;
@@ -97,13 +104,18 @@ begin  -- architecture rtl
                                                      --ja ne znam kako ili moram da
                                                      --napravim signal koji ima
                                                      --tu vrednost?
+      when pra =>
+        op_next <= op_reg;
+        res_next <= res_reg;
+        one_next <= one_reg;
       when i1 =>
         op_next <= unsigned(x_in);
         res_next <= to_unsigned(0,WIDTH); 
-        one_next <= (to_unsigned(0,2) & one_reg(WIDTH-3 downto 0)); 
+        one_next <= (to_unsigned(0,2) & one_reg(WIDTH-1 downto 2)); 
       when calc =>
         op_next <= (op_reg - (res_reg + one_reg));
         res_next <= (res_reg + (one_reg(WIDTH-2 downto 0) & '0'));
+        one_next <= one_reg;
       when finit =>
         op_next <= op_reg;
         res_next <= ('0' & res_reg(WIDTH-1 downto 1));
