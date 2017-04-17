@@ -1,3 +1,5 @@
+--gde da stavim output da ispisuje samo krajnji rezultat?
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
