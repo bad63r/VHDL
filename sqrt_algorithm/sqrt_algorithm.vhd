@@ -101,11 +101,7 @@ begin  -- architecture rtl
       when idle =>
         op_next <= unsigned(x_in);
         res_next <= to_unsigned(0,WIDTH); 
-        one_next <= ("01" & to_unsigned(0,WIDTH-2)); --da li ovde mogu da
-                                                     --koristim to_unsigned ali
-                                                     --ja ne znam kako ili moram da
-                                                     --napravim signal koji ima
-                                                     --tu vrednost?
+        one_next <= ("01" & to_unsigned(0,WIDTH-2)); 
       when pra =>
         op_next <= op_reg;
         res_next <= res_reg;
