@@ -141,9 +141,22 @@ begin  -- architecture rtl
     when final =>
       A_next <= A_reg;
       S_next <= S_reg;
-      P_next <= P_reg;
+      P_next <= '0' & temp_reg(WIDTH-1 downto 1);
       temp_next <= P_reg; 
       i_next <= i_reg;
+    when inc =>
+      A_next <= A_reg;
+      S_next <= S_reg;
+      P_next <= P_reg;
+      temp_next <= temp_reg;
+      i_next <= i_reg + 1;
+  end case;
+end process;
+
+--output logic
+
+--da li je bolje uvesti jos jedan registar ili nekkao mogu da prespojim pri
+--kraju p_reg na izlaz???      
 
 
 
