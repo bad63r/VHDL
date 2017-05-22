@@ -12,22 +12,24 @@ entity booth_algorithm is
     start      : in  std_logic;
     clk, reset : in  std_logic;
     ready      : out std_logic;
-    res        : out std_logic_vector(WIDTH-1 downto 0));
+    res        : out std_logic_vector(2*WIDTH-1 downto 0));
 
 end entity booth_algorithm;
 
-type state is (idle,nop,i1,i2,i3,i4,final,inc);
-signal current_state,next_state : state;
-signal A_reg,A_next : signed(WIDTH-1 downto 0);
-signal S_reg,S_next : signed(WIDTH-1 downto 0);
-signal P_reg,P_next : signed(WIDTH-1 downto 0);
-
-
-signal i_reg,i_next : unsigned(3 downto 0) := (others => '0'); --variable in "for loop"
-signal temp_reg,temp_next : signed(WIDTH-1 downto 0);
 
 
 architecture rtl of booth_algorithm is
+
+  type state is (idle,nop,i1,i2,i3,i4,final,inc);
+signal current_state,next_state : state;
+signal A_reg,A_next : signed(2*WIDTH downto 0);
+signal S_reg,S_next : signed(2*WIDTH downto 0);
+signal P_reg,P_next : signed(2*WIDTH downto 0);
+
+
+signal i_reg,i_next : unsigned(3 downto 0) := (others => '0'); --variable in "for loop"
+signal temp_reg,temp_next : signed(2*WIDTH downto 0);
+
 
 begin  -- architecture rtl
 
@@ -52,11 +54,11 @@ begin  -- architecture rtl
           next_state <= idle;
         end if;
       when nop =>
-        if (P_reg(1:0) = "01") then
+        if (P_next(1 downto 0) = "01") then
           next_state <= i1;
-        elsif (P_reg(1:0) = "10") then
+        elsif (P_next(1 downto 0) = "10") then
           next_state <= i2;
-        elsif (P(1:0) = "00") then
+        elsif (P_next(1 downto 0) = "00") then
           next_state <= i3;
         else
           next_state <= i4;
@@ -75,6 +77,8 @@ begin  -- architecture rtl
         else
           next_state <= idle;
         end if;
+      when others =>
+        next_state <= idle;
     end case;
   end process;
 
@@ -102,12 +106,13 @@ begin  -- architecture rtl
 --datapath routing network
   process(a_in,b_in,current_state,A_reg,A_next,S_next,S_reg,P_reg,P_next,temp_reg,temp_next,i_reg,i_next)
   begin
+    case current_state is
     when idle =>
       A_next <= signed(a_in) & "000000000";
       S_next <= (-signed(a_in)) & "000000000";
       P_next <= "00000000" & signed(b_in) & '0';
-      temp_next <= 0;
-      i_next <= 0;
+      temp_next <= to_signed(0,2*WIDTH+1);
+      i_next <= to_unsigned(0,WIDTH-4);
     when nop =>
       A_next <= A_reg;
       S_next <= S_reg;
@@ -141,7 +146,7 @@ begin  -- architecture rtl
     when final =>
       A_next <= A_reg;
       S_next <= S_reg;
-      P_next <= '0' & temp_reg(WIDTH-1 downto 1);
+      P_next <= '0' & temp_reg(2*WIDTH downto 1);
       temp_next <= P_reg; 
       i_next <= i_reg;
     when inc =>
@@ -153,7 +158,9 @@ begin  -- architecture rtl
   end case;
 end process;
 
+
 --output logic
+res <= std_logic_vector(P_reg(2*WIDTH downto 1));
 
 --da li je bolje uvesti jos jedan registar ili nekkao mogu da prespojim pri
 --kraju p_reg na izlaz???      
