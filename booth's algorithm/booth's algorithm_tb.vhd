@@ -43,7 +43,7 @@ begin  -- architecture rtl
       b_in <= "00000000","10000010" after 20 ns, "10000010" after 200 ns;
 
       start <='1'; 
-      reset <= '1','0' after 10 ns,'1' after 125 ns, '0' after 200 ns;
+      reset <= '1','0' after 10 ns;
       wait;
       end process;
  

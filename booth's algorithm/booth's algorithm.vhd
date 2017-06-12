@@ -25,7 +25,7 @@ signal current_state,next_state : state;
 signal A_reg,A_next : signed(2*WIDTH downto 0);
 signal S_reg,S_next : signed(2*WIDTH downto 0);
 signal P_reg,P_next : signed(2*WIDTH downto 0);
-
+signal res_reg,res_next : signed(2*WIDTH downto 0);
 
 signal i_reg,i_next : unsigned(3 downto 0) := (others => '0'); --variable in "for loop"
 signal temp_reg,temp_next : signed(2*WIDTH downto 0);
@@ -44,7 +44,7 @@ begin  -- architecture rtl
   end process;
 
 --controlpath generating next_state logic
-  process(start,A_reg,A_next,S_reg,S_next,P_reg,P_next,temp_next,temp_reg,current_state)
+  process(start,A_reg,A_next,S_reg,S_next,P_reg,P_next,temp_next,temp_reg,i_reg,i_next,res_reg,res_next,current_state)
   begin
     case current_state is
       when idle =>
@@ -92,33 +92,39 @@ begin  -- architecture rtl
       A_reg <= (others => '0');
       S_reg <= (others => '0');
       P_reg <= (others => '0');
+      res_reg <= (others => '0');
       temp_reg <= (others => '0');
       i_reg <= (others => '0');
     elsif rising_edge(clk) then
       A_reg <= A_next;
       S_reg <= S_next;
       P_reg <= P_next;
+      res_reg <= res_next;
       temp_reg <= temp_next;
       i_reg <= i_next;
     end if;
   end process;
 
 --datapath routing network
-  process(a_in,b_in,current_state,A_reg,A_next,S_next,S_reg,P_reg,P_next,temp_reg,temp_next,i_reg,i_next)
+  process(a_in,b_in,current_state,A_reg,A_next,S_next,S_reg,P_reg,P_next,temp_reg,temp_next,i_reg,i_next,res_reg,res_next)
   begin
     case current_state is
     when idle =>
       A_next <= signed(a_in) & "000000000";
       S_next <= (-signed(a_in)) & "000000000";
       P_next <= "00000000" & signed(b_in) & '0';
-      temp_next <= to_signed(0,2*WIDTH+1);
-      i_next <= to_unsigned(0,WIDTH-4);
+      temp_next <= to_signed(0,2*WIDTH+2); -- 18 bits bcs + of 2 operands of 17
+                                           -- bits is 18 bits
+                                        
+      res_next <= to_signed(0,2*WIDTH+1);
+      i_next <= to_unsigned(0,4);
     when nop =>
       A_next <= A_reg;
       S_next <= S_reg;
       P_next <= P_reg;
       temp_next <= temp_reg;
-      i_next <= i_reg;
+      res_reg <= res_next;
+      i_next <= 
     when i1 =>
       A_next <= A_reg;
       S_next <= S_reg;
