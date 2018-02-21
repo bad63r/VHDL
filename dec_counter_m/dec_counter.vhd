@@ -9,7 +9,7 @@ entity dec_counter is
 end dec_counter;
 
 architecture rtl of dec_counter is
-	signal cnt_reg: unsigned(3 downto 0);
+	signal cnt_reg:  unsigned(3 downto 0);
 	signal cnt_next: unsigned(3 downto 0);
 begin
 
