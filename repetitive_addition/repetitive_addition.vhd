@@ -30,7 +30,7 @@ begin  -- architecture rtl
 
 --controlpath
 
-  --register state
+  --state register
   process(clk,reset)
   begin
     if reset = '1' then
@@ -40,7 +40,7 @@ begin  -- architecture rtl
     end if;
   end process;
 
-  --logika za generisanje stanja
+  --next-state logic
   process(current_state,a_is_0,b_is_0,count_0,start)
   begin
     case current_state is
@@ -73,7 +73,7 @@ begin  -- architecture rtl
 
 --datapath
 
-  --datapath registers
+  --data registers
   process(clk,reset)
   begin
     if reset ='1' then
@@ -87,7 +87,7 @@ begin  -- architecture rtl
     end if;
   end process;
 
-  --datapath routing network
+  --routing network
 
   process(current_state,a_reg,n_reg,r_reg,a_in,b_in,adder_out,sub_out)
   begin
