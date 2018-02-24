@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity rep_addition is
+entity repetitive_addition is
   
   generic (
     WIDTH : natural := 8);
@@ -14,17 +14,17 @@ entity rep_addition is
     result     : out std_logic_vector(2*WIDTH-1 downto 0);
     ready      : out std_logic);
 
-end entity rep_addition;
+end entity repetitive_addition;
 
-architecture rtl of rep_addition is
+architecture rtl of repetitive_addition is
 
   type state is (idle,ab0,load,op);
-  signal current_state,next_state : state;
-  signal a_is_0,b_is_0,count_0 : std_logic;  
-  signal a_reg,n_reg,a_next,n_next : unsigned(WIDTH-1 downto 0); 
-  signal r_reg,r_next : unsigned(2*WIDTH-1 downto 0);
-  signal adder_out : unsigned(2*WIDTH-1 downto 0);
-  signal sub_out : unsigned(WIDTH-1 downto 0);
+  signal current_state, next_state : state;
+  signal a_is_0, b_is_0, count_0 : std_logic;  
+  signal a_reg, n_reg, a_next, n_next : unsigned(WIDTH - 1 downto 0); 
+  signal r_reg, r_next : unsigned(2*WIDTH - 1 downto 0);
+  signal adder_out : unsigned(2*WIDTH - 1 downto 0);
+  signal sub_out : unsigned(WIDTH - 1 downto 0);
 
 begin  -- architecture rtl
 
@@ -35,18 +35,18 @@ begin  -- architecture rtl
   begin
     if reset = '1' then
       current_state <= idle;
-    else
+    elsif rising_edge(clk) then
       current_state <= next_state;
     end if;
   end process;
 
   --next-state logic
-  process(current_state,a_is_0,b_is_0,count_0,start)
+  process(current_state, a_is_0, b_is_0, count_0, start)
   begin
     case current_state is
       when idle =>
         if start = '1' then
-          if a_in = 0 or b_in = 0 then
+          if (a_is_0 = '1' or b_is_0 = '1') then
             next_state <= ab0;
           else
             next_state <= load;
@@ -59,7 +59,7 @@ begin  -- architecture rtl
       when load =>
         next_state <= op;
       when op =>
-        if count_0 = '0' then
+        if count_0 = '1' then
           next_state <= idle;
         else
           next_state <= op;
@@ -109,21 +109,23 @@ begin  -- architecture rtl
         n_next <= sub_out;
         r_next <= adder_out;
     end case;
+  end process;
+
 
     --datapath functional units
 
-    adder_out <= ((conv_std_logic_vector(0,WIDTH) & a_reg) + r_reg;
-    sub_out <= n_reg -1;
+    adder_out <= (to_unsigned(0, WIDTH) & a_reg) + r_reg;
+    sub_out <= n_reg - 1;
 
     --datapath status signals
 
-    a_is_0 <= '1' when a_in = conv_std_logic_vector(0,WIDTH) else '0';
-    b_is_0 <= '1' when b_in =  conv_std_logic_vector(0,WIDTH) else '0';
-    count_0 <= '1' when n_next = conv_std_logic_vector(0,WIDTH) else '0';
+    a_is_0 <= '1' when a_in = std_logic_vector(to_unsigned(0, WIDTH)) else '0';
+    b_is_0 <= '1' when b_in =  std_logic_vector(to_unsigned(0,WIDTH)) else '0';
+    count_0 <= '1' when n_next = to_unsigned(0, WIDTH) else '0'; 
 
     --datapath output
 
-    result <= conv_std_logic_vector(a_reg);
+   result <= std_logic_vector(r_reg);
                   
 
-architecture rtl;
+end architecture rtl;
