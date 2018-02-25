@@ -52,7 +52,7 @@ begin  -- architecture rtl
       when add =>
         next_state <= shift;
       when shift =>
-        if n_next /= '0' then
+        if n_next /= 0 then
           if b_next(0) = '1' then
             next_state <= add;
           else
@@ -62,6 +62,8 @@ begin  -- architecture rtl
           next_state <= idle;
         end if;
     end case;
+  end process;
+
 
     --controlpath output logic
     ready <= '1' when (current_state = idle) else '0';
@@ -87,15 +89,15 @@ begin  -- architecture rtl
     begin
       case current_state is
         when idle =>
-          a_next <= a_in;
-          b_next <= b_in;
-          n_next <= conv_std_logic_vector(WIDTH,WIDTH);
-          p_next <= conv_std_logic_vector(0,2*WIDTH);
+          a_next <= unsigned(a_in);
+          b_next <= unsigned(b_in);
+          n_next <= to_unsigned(WIDTH, WIDTH);
+          p_next <= to_unsigned(0, 2*WIDTH);
         when add =>
           a_next <= a_reg;
           n_next <= n_reg;
           b_next <= b_reg;
-          p_next <= p_reg + (conv_std_logic_vector(0,WIDTH) & a_reg);
+          p_next <= p_reg + (to_unsigned(0, WIDTH) & a_reg);
         when shift =>
           a_next <= a_reg(WIDTH-2 downto 0) & '0';
           b_next <= '0' & b_reg(WIDTH-1 downto 1);
@@ -105,7 +107,7 @@ begin  -- architecture rtl
     end process;
 
     --system output
-    sum_out <= conv_std_logic_vector(p_reg);
+    sum_out <= std_logic_vector(p_reg);
                      
 
 end architecture rtl;
