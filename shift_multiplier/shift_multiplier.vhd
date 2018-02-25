@@ -18,10 +18,10 @@ end entity shift_multiplier;
 
 architecture rtl of shift_multiplier is
 
-  type state is (idle,add,shift);
-  signal current_state,next_state : state;
-  signal a_reg,a_next,b_reg,b_next,n_reg,n_next : unsigned(WIDTH-1 downto 0);
-  signal p_reg,p_next : unsigned(2*WIDTH-1 downto 0);
+  type state is (idle, add, shift);
+  signal current_state, next_state : state;
+  signal a_reg, a_next, b_reg, b_next, n_reg, n_next : unsigned(WIDTH-1 downto 0);
+  signal p_reg, p_next : unsigned(2*WIDTH-1 downto 0);
   
 begin  -- architecture rtl
 
@@ -36,7 +36,7 @@ begin  -- architecture rtl
   end process;
   
   --controlpath logic for generating next state
-  process(current_state,start,n_next,b_next,b_in)
+  process(current_state, start, n_next, b_next, b_in)
   begin
     case current_state is
       when idle =>
@@ -67,7 +67,7 @@ begin  -- architecture rtl
     ready <= '1' when (current_state = idle) else '0';
 
     --datapath registers
-    process(clk,reset)
+    process(clk, reset)
     begin
       if reset = '1' then
         a_reg <= (others => '0');
