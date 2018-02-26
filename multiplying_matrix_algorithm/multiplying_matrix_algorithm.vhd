@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use numeric_std.all;
 
+use work.utils_pkg.all;
+
 entity multiplying_matrix_algorithm is
   
   generic (
