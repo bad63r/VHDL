@@ -128,19 +128,19 @@ begin  -- architecture rtl
       when i2 =>
         k_next     <= (others => '0');
         temp_next  <= (others => '0');
-        a_addr_o   <= (i_reg * matrix_w + k_next);
+        a_addr_o   <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
         a_we_o     <= '1';
-        b_addr_o   <= (k_next * matrix_w + j_reg);
+        b_addr_o   <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
         b_we_o     <= '1';
       when i3 =>
         temp_next <= temp_reg + unsigned(a_data_i) + unsigned(b_data_i);
         k_next    <= k_reg + 1;
-        a_addr_o  <= (i_reg * matrix_w + k_next);
+        a_addr_o  <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
         a_we_o    <= '1';
-        b_addr_o  <= (k_next * matrix_w + j_reg);
+        b_addr_o  <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
         b_we_o    <= '1';
       when i3e =>
-        c_addr_o <= (i_reg * matrix_w + j_reg);
+        c_addr_o <= std_logic_vector(i_reg * unsigned(matrix_w) + j_reg);
         c_we_o   <= '1';
         c_data_o <= std_logic_vector(temp_reg);
         j_next <= j_reg + 1;
@@ -151,8 +151,8 @@ begin  -- architecture rtl
   end process;
 
   --datapath: status signals
-  comp1 <= '1' when k_next = matrix_width else '0';
-  comp2 <= '1' when j_next = matrix_width else '0';
-  comp3 <= '1' when i_next = matrix_width else '0';
+  comp1 <= '1' when k_next = unsigned(matrix_w) else '0';
+  comp2 <= '1' when j_next = unsigned(matrix_w) else '0';
+  comp3 <= '1' when i_next = unsigned(matrix_w) else '0';
            
 end architecture rtl;
