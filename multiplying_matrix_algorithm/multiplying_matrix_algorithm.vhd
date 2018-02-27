@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use numeric_std.all;
+use ieee.numeric_std.all;
 
 use work.utils_pkg.all;
 
@@ -15,6 +15,7 @@ entity multiplying_matrix_algorithm is
     start    : in  std_logic;
     reset    : in  std_logic;
     ready    : out std_logic;
+    matrix_w : in  std_logic_vector(log2c(SIZE)-1 downto 0);
     --Matrix A
     a_addr_o : out std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);  -- addresses for the first memory where matrix A is stored
     a_data_i : in  std_logic_vector(WIDTH-1 downto 0);  -- data which represents value of elemnts of matrix A
@@ -34,10 +35,11 @@ architecture rtl of multiplying_matrix_algorithm is
 
   type states is (idle, i1, i2, i3, i2e, i3e);
   signal current_state, next_state : states;
-  signal i_reg, j_reg, k_reg : unsigned(log2c(SIZE)-1 downto 0);
+  signal i_reg, j_reg, k_reg    : unsigned(log2c(SIZE)-1 downto 0);
   signal i_next, j_next, k_next : unsigned(log2c(SIZE)-1 downto 0);
-  signal temp_reg, temp_next : unsigned(log2c(2*WIDTH + SIZE)-1 downto 0);
-  constant matrix_width : unsigned(log2c(SIZE)-1 downto 0) := SIZE;
+  signal temp_reg, temp_next    : unsigned(log2c(2*WIDTH + SIZE)-1 downto 0);
+  signal comp1, comp2, comp3    : std_logic;
+
 begin  -- architecture rtl
 
   --control path: state register
@@ -115,6 +117,7 @@ begin  -- architecture rtl
     b_we_o     <= '0';
     c_addr_o   <= (others => '0');
     c_data_o   <= (others => '0');
+    c_we_o     <= '0';
     ready      <= '0';
     
     case current_state is
@@ -125,19 +128,19 @@ begin  -- architecture rtl
       when i2 =>
         k_next     <= (others => '0');
         temp_next  <= (others => '0');
-        a_addr_o   <= (i_reg * matrix_width + k_next);
+        a_addr_o   <= (i_reg * matrix_w + k_next);
         a_we_o     <= '1';
-        b_addr_o   <= (k_next * matrix_width + j_reg);
+        b_addr_o   <= (k_next * matrix_w + j_reg);
         b_we_o     <= '1';
       when i3 =>
         temp_next <= temp_reg + unsigned(a_data_i) + unsigned(b_data_i);
         k_next    <= k_reg + 1;
-        a_addr_o  <= (i_reg * matrix_width + k_next);
+        a_addr_o  <= (i_reg * matrix_w + k_next);
         a_we_o    <= '1';
-        b_addr_o  <= (k_next * matrix_width + j_reg);
-        b_we_o    <= '1';2
+        b_addr_o  <= (k_next * matrix_w + j_reg);
+        b_we_o    <= '1';
       when i3e =>
-        c_addr_o <= (i_reg * matrix_width + j_reg);
+        c_addr_o <= (i_reg * matrix_w + j_reg);
         c_we_o   <= '1';
         c_data_o <= std_logic_vector(temp_reg);
         j_next <= j_reg + 1;
