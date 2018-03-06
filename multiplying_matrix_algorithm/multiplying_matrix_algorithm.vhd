@@ -129,16 +129,12 @@ begin  -- architecture rtl
         k_next     <= (others => '0');
         temp_next  <= (others => '0');
         a_addr_o   <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
-        a_we_o     <= '1';
         b_addr_o   <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
-        b_we_o     <= '1';
       when i3 =>
         temp_next <= temp_reg + unsigned(a_data_i) + unsigned(b_data_i);
         k_next    <= k_reg + 1;
         a_addr_o  <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
-        a_we_o    <= '1';
         b_addr_o  <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
-        b_we_o    <= '1';
       when i3e =>
         c_addr_o <= std_logic_vector(i_reg * unsigned(matrix_w) + j_reg);
         c_we_o   <= '1';
