@@ -33,7 +33,7 @@ architecture rtl of multiplying_matrix_algorithm_tb is
   signal b_we_o   : std_logic;
   --Memory C
   signal c_addr_o : std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);
-  signal c_data_o : std_logic_vector(log2c(2*WIDTH + SIZE) - 1 downto 0);
+  signal c_data_o : std_logic_vector(2*WIDTH+SIZE-1 downto 0);
   signal c_we_o   : std_logic;
 
 
@@ -109,7 +109,7 @@ begin  -- architecture rtl
   --Memory C
   RAM_memory_3: entity work.RAM_memory
     generic map (
-      WIDTH => log2c(2*WIDTH + SIZE),
+      WIDTH => (2*WIDTH + SIZE),
       SIZE  => SIZE_mem)
     port map (
       clk        => clk,
@@ -127,9 +127,7 @@ begin  -- architecture rtl
 stim_gen: process is
  begin  -- process stim_gen
    matrix_w <= std_logic_vector(to_unsigned(3, log2c(SIZE)));
-   reset <= '1';
-   wait for 500 ns;
-   reset <= '0';
+   reset <= '1', '0' after 500 ns;
    wait until falling_edge(clk);
 
    --Loading the data into memory A

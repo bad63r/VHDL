@@ -26,7 +26,7 @@ entity multiplying_matrix_algorithm is
     b_we_o   : out std_logic;
     --Matrix C
     c_addr_o : out std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);  -- addresses for the third memory where matrix C is stored
-    c_data_o : out std_logic_vector(log2c(2*WIDTH + SIZE) - 1 downto 0);  -- data which represents value of elements of matrix C
+    c_data_o : out std_logic_vector(2*WIDTH+SIZE-1 downto 0);  -- data which represents value of elements of matrix C
     c_we_o   : out std_logic);
 
 end entity multiplying_matrix_algorithm;
@@ -37,7 +37,7 @@ architecture rtl of multiplying_matrix_algorithm is
   signal current_state, next_state : states;
   signal i_reg, j_reg, k_reg    : unsigned(log2c(SIZE)-1 downto 0);
   signal i_next, j_next, k_next : unsigned(log2c(SIZE)-1 downto 0);
-  signal temp_reg, temp_next    : unsigned(log2c(2*WIDTH + SIZE)-1 downto 0);
+  signal temp_reg, temp_next    : unsigned(2*WIDTH+SIZE-1 downto 0);
   signal comp1, comp2, comp3    : std_logic;
 
 begin  -- architecture rtl
