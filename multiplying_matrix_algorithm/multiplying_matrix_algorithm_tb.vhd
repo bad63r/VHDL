@@ -10,13 +10,15 @@ end entity multiplying_matrix_algorithm_tb;
 
 architecture rtl of multiplying_matrix_algorithm_tb is
 
-  constant WIDTH : integer := 8;
-  constant SIZE : integer := 3;
+  constant WIDTH    : integer := 8;
+  constant SIZE     : integer := 3;
   constant SIZE_mem : integer := SIZE*SIZE;
 
   type mem_type is array (0 to SIZE*SIZE-1) of std_logic_vector(WIDTH-1 downto 0);
 
-  signal mem_a_data, mem_b_data : std_logic_vector(WIDTH-1 downto 0);
+  signal mem_a_data, mem_b_data     : std_logic_vector(WIDTH-1 downto 0);
+  signal mem_a_addr_o, mem_b_addr_o : std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);
+  signal mem_a_we_o, mem_b_we_o     : std_logic;
 
   signal clk      : std_logic;
   signal start    : std_logic;
@@ -83,40 +85,54 @@ begin  -- architecture rtl
       c_we_o   => c_we_o);
 
   --Memory A
-  RAM_memory_1: entity work.RAM_memory
+  RAM_memory_2ports_1: entity work.RAM_memory_2ports
     generic map (
       WIDTH => WIDTH,
       SIZE  => SIZE_mem)
     port map (
-      clk        => clk,
-      address_in => a_addr_o,
-      data_in    => mem_a_data,
-      data_out   => a_data_i,
-      we         => a_we_o);
+      clk           => clk,
+      address_in_p1 => mem_a_addr_o,
+      data_in_p1    => mem_a_data,
+      data_out_p1   => open,
+      we_p1         => mem_a_we_o,
+      address_in_p2 => a_addr_o,
+      data_in_p2    => (others => '0'),
+      data_out_p2   => a_data_i,
+      we_p2         => a_we_o);
+
 
   --Memory B
-  RAM_memory_2: entity work.RAM_memory
+  RAM_memory_2ports_2: entity work.RAM_memory_2ports
     generic map (
       WIDTH => WIDTH,
       SIZE  => SIZE_mem)
     port map (
-      clk        => clk,
-      address_in => b_addr_o,
-      data_in    => mem_b_data,
-      data_out   => b_data_i,
-      we         => b_we_o);
+      clk           => clk,
+      address_in_p1 => mem_b_addr_o,
+      data_in_p1    => mem_b_data,
+      data_out_p1   => open,
+      we_p1         => mem_b_we_o,
+      address_in_p2 => b_addr_o,
+      data_in_p2    => (others => '0'),
+      data_out_p2   => b_data_i,
+      we_p2         => b_we_o);
+
 
   --Memory C
-  RAM_memory_3: entity work.RAM_memory
+  RAM_memory_2ports_3: entity work.RAM_memory_2ports
     generic map (
       WIDTH => (2*WIDTH + SIZE),
       SIZE  => SIZE_mem)
     port map (
-      clk        => clk,
-      address_in => c_addr_o,
-      data_in    => c_data_o,
-      data_out   => open,
-      we         => c_we_o);
+      clk           => clk,
+      address_in_p1 => (others => '0'),
+      data_in_p1    => (others => '0'),
+      data_out_p1   => open,
+      we_p1         => '0',
+      address_in_p2 => c_addr_o,
+      data_in_p2    => c_data_o,
+      data_out_p2   => open,
+      we_p2         => c_we_o);
 
   clk_gen: process is
   begin  -- process clk_gen
@@ -130,28 +146,28 @@ stim_gen: process is
    reset <= '1', '0' after 500 ns;
    wait until falling_edge(clk);
 
-   --Loading the data into memory A
-   a_we_o <= '1';
+
+
+
+--Loading the data into memory A
+   mem_a_we_o <= '1';
    for i in 0 to SIZE*SIZE-1 loop
-     a_addr_o <= std_logic_vector(to_unsigned(i, a_addr_o'length));
+     mem_a_addr_o <= std_logic_vector(to_unsigned(i, a_addr_o'length));
      mem_a_data <= MEM_A_CONTENT(i);
      wait until falling_edge(clk);
    end loop;
-   a_we_o <= '0';
+   mem_a_we_o <= '0';
 
    --Loading the data into memory B
-   b_we_o <= '1';
+   mem_b_we_o <= '1';
    for i in 0 to SIZE*SIZE-1 loop
-     b_addr_o <= std_logic_vector(to_unsigned(i, b_addr_o'length));
+     mem_b_addr_o <= std_logic_vector(to_unsigned(i, b_addr_o'length));
      mem_b_data <= MEM_B_CONTENT(i);
      wait until falling_edge(clk);
    end loop;
-   b_we_o <= '0';
+   mem_b_we_o <= '0';
 
    start <= '1';
-   wait until falling_edge(clk);
-   start <= '0';
-   wait until ready = '1';
    wait;
 
  end process stim_gen; 

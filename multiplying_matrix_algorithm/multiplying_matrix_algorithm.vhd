@@ -33,7 +33,7 @@ end entity multiplying_matrix_algorithm;
 
 architecture rtl of multiplying_matrix_algorithm is
 
-  type states is (idle, i1, i2, i3, i2e, i3e);
+  type states is (idle, i1, i2, load, i3, i2e, i3e);
   signal current_state, next_state : states;
   signal i_reg, j_reg, k_reg    : unsigned(log2c(SIZE)-1 downto 0);
   signal i_next, j_next, k_next : unsigned(log2c(SIZE)-1 downto 0);
@@ -65,12 +65,14 @@ begin  -- architecture rtl
       when i1 =>
         next_state <= i2;
       when i2 =>
+        next_state <= load;
+      when load =>
         next_state <= i3;
       when i3 =>
         if comp1 = '1' then
           next_state <= i3e;
         else
-          next_state <= i3;
+          next_state <= load;
         end if;
       when i3e =>
         if comp2 = '1' then
@@ -122,19 +124,21 @@ begin  -- architecture rtl
     
     case current_state is
       when idle =>
-        ready <= '1';
+        ready  <= '1';
+        i_next <= (others => '0');
+        j_next <= (others => '0');
+        k_next <= (others => '0');
       when i1 =>
         j_next     <= (others => '0');
       when i2 =>
         k_next     <= (others => '0');
         temp_next  <= (others => '0');
+      when load =>
         a_addr_o   <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
         b_addr_o   <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
       when i3 =>
-        temp_next <= temp_reg + unsigned(a_data_i) + unsigned(b_data_i);
+        temp_next <= temp_reg + unsigned(a_data_i) * unsigned(b_data_i);
         k_next    <= k_reg + 1;
-        a_addr_o  <= std_logic_vector(i_reg * unsigned(matrix_w) + k_next);
-        b_addr_o  <= std_logic_vector(k_next * unsigned(matrix_w) + j_reg);
       when i3e =>
         c_addr_o <= std_logic_vector(i_reg * unsigned(matrix_w) + j_reg);
         c_we_o   <= '1';
