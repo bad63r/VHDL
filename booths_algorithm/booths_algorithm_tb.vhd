@@ -39,15 +39,14 @@ begin  -- architecture rtl
 
       stim_gen: process
     begin
-      a_in <= "00000000","00001000" after 20 ns, "10000010" after 200 ns;
-      b_in <= "00000000","10000010" after 20 ns, "10000010" after 200 ns;
+      a_in <= "00001000";
+      --, "10000010" after 700 ns;
+      b_in <= "00001000";
+      --"10000010" after 700 ns;
 
       start <='1'; 
       reset <= '1','0' after 10 ns;
       wait;
       end process;
- 
-
-
 
  end architecture rtl;
