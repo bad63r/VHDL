@@ -7,7 +7,7 @@ end entity binary_division_tb;
 
 architecture rtl of binary_division_tb is
 
-  constant WIDTH : natural := 8;
+  constant WIDTH           : natural := 8;
   signal a_in, b_in        : std_logic_vector(WIDTH-1 downto 0);
   signal clk, reset        : std_logic;
   signal start             : std_logic;
@@ -39,7 +39,7 @@ begin  -- architecture rtl
   stim_gen:process
   begin
     reset <= '1','0' after 5 ns,'1' after 1500 ns;
-    start <= '1';
+    start <= '1', '0' after 30 ns;
     a_in  <= "00010000", "00000100" after 1000 ns;
     b_in  <= "00000010", "00001100" after 1000 ns;
     wait;
