@@ -1,7 +1,7 @@
 --promeniti trajanje simulacije na 2000ns
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
+use ieee.numeric_std.all;
 
 entity sqrt_algorithm_tb is
   
@@ -32,16 +32,17 @@ begin  -- architecture rtl
 
   stim_gen_clk:process
     begin
-    clk <= '0','1' after 25 ns;
-    wait for 50 ns;
+    clk <= '0','1' after 10 ns;
+    wait for 20 ns;
   end process;
 
     stim_gen: process
     begin
-      x_in <= conv_std_logic_vector(0,WIDTH),conv_std_logic_vector(9,WIDTH) after 30 ns, conv_std_logic_vector(16,WIDTH) after 80 ns, conv_std_logic_vector(64,WIDTH) after 130 ns;
+      x_in <= std_logic_vector(to_unsigned(9, WIDTH)), std_logic_vector(to_unsigned(16, WIDTH)) after 500 ns,
+              std_logic_vector(to_unsigned(64, WIDTH)) after 1000 ns;
 
-      start <='1'; 
-      reset <= '1','0' after 10 ns,'1' after 125 ns, '0' after 200 ns;
+      start <='1', '0' after 14 ns, '1' after 505 ns, '0' after 515 ns;
+      reset <= '1','0' after 10 ns;
       wait;
       end process;
       
