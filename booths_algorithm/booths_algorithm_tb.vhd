@@ -41,7 +41,7 @@ begin  -- architecture rtl
     begin
       a_in <= "00001000";
       --, "10000010" after 700 ns;
-      b_in <= "00001000";
+      b_in <= "00000001";
       --"10000010" after 700 ns;
 
       start <='1'; 

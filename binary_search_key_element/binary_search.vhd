@@ -13,7 +13,7 @@ entity binary_search is
     middle_element              : in std_logic_vector(7 downto 0);
     el_found_out                : out std_logic;
     addr_middle                 : out std_logic_vector(WIDTH-1 downto 0);
-    pos_out                     : out 
+    pos_out                     : out std_logic_vector(WIDTH-1 downto 0);
     ready                       : out std_logic);
 
 end entity binary_search;
@@ -108,11 +108,11 @@ begin  -- architecture rtl
         left_next   <= left_addr_in;
         right_next  <= right_addr_in;
         middle_next <= (others => '0');
-        addr_middle <= (left_in + right_in) / 2;
-        key_next    <= key_in;
       when load =>
-        middle_next <= middle_element;
+        addr_middle <= ((left_reg + right_reg) / 2);
+        key_next    <= key_in;
       when s1 =>
+        pos_out <= (right_reg - addr_middle)
       when s2 =>
         right_next <= addr_middle - 1;
       when s3 =>

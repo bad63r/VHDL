@@ -28,7 +28,7 @@ signal P_reg, P_next             : signed(2*WIDTH downto 0);
 signal res_reg, res_next         : signed(2*WIDTH-1 downto 0);
 
 signal i_reg, i_next             : unsigned(3 downto 0) := (others => '0'); --variable in "for loop"
-signal temp_reg, temp_next       : signed(2*WIDTH+1 downto 0);
+signal temp_reg, temp_next       : signed(2*WIDTH downto 0);
 
 
 begin  -- architecture rtl
@@ -127,42 +127,41 @@ begin  -- architecture rtl
       A_next    <= A_reg;
       S_next    <= S_reg;
       P_next    <= P_reg;
-      temp_next <= (others => '0');           --18 bits bcs + of 2 operands of 17bits
-                                              --can be max 18 bits
+      temp_next <= (others => '0');
       res_next  <= res_reg;
       i_next    <= (others => '0');
     when i1 =>
       A_next    <= A_reg;
       S_next    <= S_reg;
       P_next    <= P_reg;
-      temp_next <= to_signed(to_integer(P_reg + A_reg), 2*WIDTH+2);
+      temp_next <= to_signed(to_integer(P_reg + A_reg), 2*WIDTH+1);
       res_next  <= res_reg;
       i_next    <= i_reg;
     when i2 =>
       A_next    <= A_reg;
       S_next    <= S_reg;
       P_next    <= P_reg;
-      temp_next <= to_signed(to_integer(P_reg + S_reg), 2*WIDTH+2);
+      temp_next <= to_signed(to_integer(P_reg + S_reg), 2*WIDTH+1);
       res_next  <= res_reg;
       i_next    <= i_reg;
     when i3 =>
       A_next    <= A_reg;
       S_next    <= S_reg;
       P_next    <= P_reg;
-      temp_next <= to_signed(to_integer(P_reg), 2*WIDTH+2); 
+      temp_next <= to_signed(to_integer(P_reg), 2*WIDTH+1); 
       res_next  <= res_reg;
       i_next    <= i_reg;
     when i4 =>
       A_next    <= A_reg;
       S_next    <= S_reg;
       P_next    <= P_reg;
-      temp_next <= to_signed(to_integer(P_reg), 2*WIDTH+2);
+      temp_next <= to_signed(to_integer(P_reg), 2*WIDTH+1);
       res_next  <= res_reg;
       i_next    <= i_reg;
     when final =>
       A_next <= A_reg;
       S_next <= S_reg;
-      P_next <= '0' & temp_reg(2*WIDTH+1 downto 1); --ovde je greska u zadatku?
+      P_next <= '0' & temp_reg(2*WIDTH downto 1); 
       temp_next <= temp_reg;
       res_next  <= P_next(16 downto 1);
       i_next <= i_reg + 1;
