@@ -31,5 +31,5 @@ begin  -- architecture beh
       sum  => sum,
       cout => s3);
 
-  cout <= s2 and s3;
+  cout <= s2 or s3;
 end architecture beh;
