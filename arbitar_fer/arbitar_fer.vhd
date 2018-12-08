@@ -18,6 +18,7 @@ architecture rtl of arbitar_fer is
   
 begin  -- architecture rtl
 
+  --state register
   rad_fsm: process(clk,reset)
   begin
     if reset = '1' then
@@ -27,6 +28,7 @@ begin  -- architecture rtl
     end if;
   end process;
 
+  --next-state logic
   dodela_stanja:process(current_state,r0,r1)
   begin
     if current_state = start then
@@ -67,7 +69,8 @@ begin  -- architecture rtl
       end if;
     end if;
     end process;
-    
+
+    --datapath routing network
     dekodovanje_stanja: process(current_state)
     begin
       case current_state is

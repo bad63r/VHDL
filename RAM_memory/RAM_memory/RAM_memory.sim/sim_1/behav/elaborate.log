@@ -1,0 +1,16 @@
+Vivado Simulator 2016.2
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: /home/bad63r/Vivado/Vivado/2016.2/bin/unwrapped/lnx64.o/xelab -wto 7ab39d9c511e42c6a8ceadc75ec7a573 --debug typical --relax --mt 8 -L xil_defaultlib -L secureip --snapshot RAM_memory_tb_behav xil_defaultlib.RAM_memory_tb -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package ieee.std_logic_1164
+Compiling package xil_defaultlib.utils_pkg
+Compiling package ieee.numeric_std
+Compiling architecture rtl of entity xil_defaultlib.RAM_memory [ram_memory_default]
+Compiling architecture rtl of entity xil_defaultlib.ram_memory_tb
+Built simulation snapshot RAM_memory_tb_behav

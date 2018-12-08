@@ -1,0 +1,5 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/bad63r/GitHub/VHDL/multiplying_matrix_algorithm/utils_pkg.vhd" into library xil_defaultlib
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/bad63r/GitHub/VHDL/RAM_memory/RAM_memory.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity RAM_memory
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/bad63r/GitHub/VHDL/RAM_memory/RAM_memory_tb.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity RAM_memory_tb
