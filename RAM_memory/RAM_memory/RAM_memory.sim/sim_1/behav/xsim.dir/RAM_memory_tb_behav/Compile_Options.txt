@@ -1,1 +1,0 @@
--wto "7ab39d9c511e42c6a8ceadc75ec7a573" --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "secureip" --snapshot "RAM_memory_tb_behav" "xil_defaultlib.RAM_memory_tb" -log "elaborate.log" 

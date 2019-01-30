@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  "../../../../../multiplying_matrix_algorithm/utils_pkg.vhd"
-vhdl xil_defaultlib  "../../../../RAM_memory.vhd"
-vhdl xil_defaultlib  "../../../../RAM_memory_tb.vhd"
-
-# Do not sort compile order
-nosort
