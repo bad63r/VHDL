@@ -8,25 +8,32 @@ entity shift_multiplier is
     WIDTH : natural := 8);
 
   port (
+    --Input data interface
     a_in, b_in : in  std_logic_vector(WIDTH-1 downto 0);
+    --Command interface
     start      : in  std_logic;
+    --Clock and reset interface
     clk, reset : in  std_logic;
+    --Output data interface
     sum_out    : out std_logic_vector(2*WIDTH-1 downto 0);
+    --Status interface
     ready      : out std_logic);
 
 end entity shift_multiplier;
 
 architecture rtl of shift_multiplier is
 
+  --states of ASM
   type state is (idle, add, shift);
-  signal current_state, next_state : state;
+  signal current_state, next_state                   : state;
+  --signals for data registers
   signal a_reg, a_next, b_reg, b_next, n_reg, n_next : unsigned(WIDTH-1 downto 0);
-  signal p_reg, p_next : unsigned(2*WIDTH-1 downto 0);
+  signal p_reg, p_next                               : unsigned(2*WIDTH-1 downto 0);
   
 begin  -- architecture rtl
 
   --controlpath register
-  process(clk,reset)
+  process(clk, reset)
   begin
     if reset = '1' then
       current_state <= idle;
@@ -85,7 +92,7 @@ begin  -- architecture rtl
     end process;
 
     --datapath routing network
-    process(current_state,a_in,b_in,a_reg,b_reg,n_reg,p_reg,n_next,b_next)
+    process(current_state, a_in, b_in, a_reg, b_reg, n_reg, p_reg, n_next, b_next)
     begin
       case current_state is
         when idle =>

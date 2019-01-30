@@ -8,7 +8,7 @@ end entity shift_multiplier_tb;
 
 architecture rtl of shift_multiplier_tb is
 
-  constant WIDTH: natural:= 8;
+  constant WIDTH    : natural := 8;
   signal a_in, b_in : std_logic_vector(WIDTH-1 downto 0);
   signal start      : std_logic;
   signal clk, reset : std_logic;
