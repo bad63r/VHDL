@@ -99,7 +99,7 @@ begin  -- architecture rtl
         ready      <= '1';
         if start = '1' then
           next_state <= i1;
-        elsif
+        else
           next_state <= idle;
         end if;
       when i1 =>
