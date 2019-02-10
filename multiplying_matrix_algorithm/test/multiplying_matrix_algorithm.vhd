@@ -86,7 +86,6 @@ begin  -- architecture rtl
     c_add_o   <= (others => '0');
     c_data_o  <= (others => '0');
     c_we_o    <= '0';
-
     --status signal
     ready     <= '0';
 
