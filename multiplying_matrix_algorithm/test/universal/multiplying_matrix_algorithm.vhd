@@ -8,7 +8,8 @@ entity multiplaying_matrix_algorithm is
 
   generic (
     WIDTH : natural := 8;
-    SIZE  : natural := 3);
+    SIZE  : natural := 3); --maximal dimension, either row or column(the
+                           --biggest of two)
 
   port (
     --Clock and reset interface
@@ -23,7 +24,7 @@ entity multiplaying_matrix_algorithm is
     b_data_i   : in  std_logic_vector(WIDTH-1 downto 0);
     b_we_o     : out std_logic;
     --Matrix dimensions 
-    n_in       : in  std_logic_vector(log2c(SIZE)-1 downto 0);
+    n_in       : in  std_logic_vector(log2c(SIZE)-1 do wnto 0);
     m_in       : in  std_logic_vector(log2c(SIZE)-1 downto 0);
     p_in       : in  std_logic_vector(log2c(SIZE)-1 downto 0);
     --Command interface
