@@ -13,14 +13,12 @@ architecture rtl of multiplaying_matrix_algorithm_tb is
 
   --constants
   constant WIDTH : natural := 8;
-  constant SIZE  : natural := 3;
+  constant SIZE  : natural := 5;
+
   constant N     : integer := 3;
-  constant M     : integer := 3;
+  constant M     : integer := 4;
   constant P     : integer := 3;
 
-  --test
-  signal data_test : std_logic_vector(WIDTH-1 downto 0);
-  signal addr_test : std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);
   --signals
   signal clk, reset : std_logic;
   --matrix A
@@ -32,9 +30,9 @@ architecture rtl of multiplaying_matrix_algorithm_tb is
   signal b_data_i : std_logic_vector(WIDTH-1 downto 0);
   signal b_we_o   : std_logic;
   --limiters
-  signal n_in       : std_logic_vector(log2c(N)-1 downto 0);
-  signal m_in       : std_logic_vector(log2c(M)-1 downto 0);
-  signal p_in       : std_logic_vector(log2c(P)-1 downto 0);
+  signal n_in       : std_logic_vector(log2c(SIZE)-1 downto 0);
+  signal m_in       : std_logic_vector(log2c(SIZE)-1 downto 0);
+  signal p_in       : std_logic_vector(log2c(SIZE)-1 downto 0);
   --start and ready signals
   signal start      : std_logic;
   signal ready      : std_logic;
@@ -52,37 +50,63 @@ architecture rtl of multiplaying_matrix_algorithm_tb is
   signal mem_b_addr_in : std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);
   signal mem_b_data_in : std_logic_vector(WIDTH-1 downto 0);
   signal mem_b_we_in   : std_logic;
-      --memory C
-  signal mem_c_addr_in : std_logic_vector(log2c(SIZE*SIZE)-1 downto 0);
-  signal mem_c_data_in : std_logic_vector(WIDTH-1 downto 0);
-  signal mem_c_we_in   : std_logic;
 
   --creating type for memory
   type mem_t is array (0 to SIZE*SIZE-1) of std_logic_vector(WIDTH-1 downto 0);
 
   --constant that will be storage for memory A
-  constant MEM_A_CONTENT : mem_t := (std_logic_vector(to_unsigned(0, WIDTH)),
-                                     std_logic_vector(to_unsigned(6, WIDTH)),
-                                     std_logic_vector(to_unsigned(6, WIDTH)),
-                                     std_logic_vector(to_unsigned(9, WIDTH)),
-                                     std_logic_vector(to_unsigned(6, WIDTH)),
-                                     std_logic_vector(to_unsigned(0, WIDTH)),
-                                     std_logic_vector(to_unsigned(7, WIDTH)),
-                                     std_logic_vector(to_unsigned(3, WIDTH)),
-                                     std_logic_vector(to_unsigned(5, WIDTH)));
-
-  --constant that will be storage for memory B
-  constant MEM_B_CONTENT : mem_t := (std_logic_vector(to_unsigned(7, WIDTH)),
-                                     std_logic_vector(to_unsigned(1, WIDTH)),
-                                     std_logic_vector(to_unsigned(4, WIDTH)),
+  constant MEM_A_CONTENT : mem_t := (std_logic_vector(to_unsigned(1, WIDTH)),
                                      std_logic_vector(to_unsigned(2, WIDTH)),
-                                     std_logic_vector(to_unsigned(5, WIDTH)),
-                                     std_logic_vector(to_unsigned(8, WIDTH)),
-                                     std_logic_vector(to_unsigned(6, WIDTH)),
                                      std_logic_vector(to_unsigned(3, WIDTH)),
-                                     std_logic_vector(to_unsigned(3 WIDTH)));
+                                     std_logic_vector(to_unsigned(4, WIDTH)),
+                                     std_logic_vector(to_unsigned(5, WIDTH)),
+                                     std_logic_vector(to_unsigned(6, WIDTH)),
+                                     std_logic_vector(to_unsigned(7, WIDTH)),
+                                     std_logic_vector(to_unsigned(8, WIDTH)),
+                                     std_logic_vector(to_unsigned(9, WIDTH)),
+                                     std_logic_vector(to_unsigned(10, WIDTH)),
+                                     std_logic_vector(to_unsigned(11, WIDTH)),
+                                     std_logic_vector(to_unsigned(12, WIDTH)),
+                                     std_logic_vector(to_unsigned(13, WIDTH)),
+                                     std_logic_vector(to_unsigned(14, WIDTH)),
+                                     std_logic_vector(to_unsigned(15, WIDTH)),
+                                     std_logic_vector(to_unsigned(16, WIDTH)),
+                                     others => (others => '0') );
 
-  constant MEM_C_CONTENT : mem_t;
+  constant MEM_B_CONTENT : mem_t := (std_logic_vector(to_unsigned(16, WIDTH)),
+                                     std_logic_vector(to_unsigned(15, WIDTH)),
+                                     std_logic_vector(to_unsigned(14, WIDTH)),
+                                     std_logic_vector(to_unsigned(13, WIDTH)),
+                                     std_logic_vector(to_unsigned(12, WIDTH)),
+                                     std_logic_vector(to_unsigned(11, WIDTH)),
+                                     std_logic_vector(to_unsigned(10, WIDTH)),
+                                     std_logic_vector(to_unsigned(9, WIDTH)),
+                                     std_logic_vector(to_unsigned(8, WIDTH)),
+                                     std_logic_vector(to_unsigned(7, WIDTH)),
+                                     std_logic_vector(to_unsigned(6, WIDTH)),
+                                     std_logic_vector(to_unsigned(5, WIDTH)),
+                                     std_logic_vector(to_unsigned(4, WIDTH)),
+                                     std_logic_vector(to_unsigned(3, WIDTH)),
+                                     std_logic_vector(to_unsigned(2, WIDTH)),
+                                     std_logic_vector(to_unsigned(1, WIDTH)),
+                                     others => (others => '0'));
+  -- --constant that will be storage for memory B
+  -- constant MEM_B_CONTENT : mem_t := (std_logic_vector(to_unsigned(7, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(1, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(1, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(4, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(2, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(5, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(4, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(2, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(5, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(8, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(6, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(8, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(1, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(10, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(3, WIDTH)),
+  --                                    std_logic_vector(to_unsigned(3 WIDTH)));
 
 begin  -- architecture rtl
 
@@ -171,9 +195,9 @@ begin  -- architecture rtl
     wait until falling_edge(clk);
 
 
-    n_in <= std_logic_vector((to_unsigned(N, log2c(N))));
-    m_in <= std_logic_vector((to_unsigned(M, log2c(M))));
-    p_in <= std_logic_vector((to_unsigned(P, log2c(P))));
+    n_in <= std_logic_vector((to_unsigned(N, log2c(SIZE))));
+    m_in <= std_logic_vector((to_unsigned(M, log2c(SIZE))));
+    p_in <= std_logic_vector((to_unsigned(P, log2c(SIZE))));
 
 
 
@@ -187,12 +211,6 @@ begin  -- architecture rtl
       end loop;
     end loop;
     mem_a_we_in <= '0';
-
-    for i in 0 to 8 loop
-      addr_test <= std_logic_vector(to_unsigned(i, addr_test'length));
-      wait until falling_edge(clk);
-    end loop;
-
 
 
     --load data into matrix B memory
