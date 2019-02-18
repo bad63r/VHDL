@@ -28,5 +28,10 @@ ylabel('amplitude');
 hold on;
 
 % FFT
+AUDIO_sig = fft(audio_sig);
+figure;plot(abs(AUDIO_sig))
+title('FFT of audio signa');
+xlabel('time');
+ylabel('magnitude');
 
 
