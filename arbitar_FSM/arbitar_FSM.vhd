@@ -19,7 +19,7 @@ architecture rtl of arbitar is
 begin  -- architecture rtl
 
   --state register
-  rad_fsm: process(clk,reset)
+  rad_fsm: process(clk, reset)
   begin
     if reset = '1' then
       current_state <= waitr;
@@ -29,7 +29,7 @@ begin  -- architecture rtl
   end process;
 
   --next-state logic
-  dodela_stanja:process(current_state,r0,r1)
+  dodela_stanja:process(current_state, r0, r1)
   begin
     if current_state = waitr then
       if (r1 = '0') and (r0 = '0') then
